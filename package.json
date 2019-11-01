@@ -1,0 +1,59 @@
+{
+  "name": "gods-pen-server",
+  "version": "1.0.0",
+  "description": "码良服务端",
+  "private": false,
+  "dependencies": {
+    "ali-oss": "^5.2.0",
+    "babel-core": "6.26.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-es2017": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "captchapng": "^0.0.1",
+    "co": "^4.6.0",
+    "crypto-js": "^3.1.9-1",
+    "egg": "^2.2.0",
+    "egg-cors": "^1.1.0",
+    "egg-mysql": "^3.0.0",
+    "egg-security": "2.5.0",
+    "egg-sequelize": "2.0.2",
+    "egg-validate": "^1.0.0",
+    "elasticsearch": "^15.1.1",
+    "ioredis": "^4.6.2",
+    "js-yaml": "^3.13.1",
+    "md5": "^2.2.1",
+    "mime": "^2.4.0",
+    "mockjs": "^1.0.1-beta3",
+    "moment": "^2.18.1",
+    "nodemailer": "^4.0.1",
+    "nunjucks": "^3.0.0",
+    "opentsdb-node-client": "^1.0.1",
+    "stream-wormhole": "^1.1.0"
+  },
+  "devDependencies": {
+    "autod": "^2.8.0",
+    "egg-bin": "^3.3.0",
+    "egg-scripts": "^2.11.1",
+    "egg-ci": "^1.6.0",
+    "egg-mock": "^3.20.0",
+    "eslint": "^3.19.0",
+    "eslint-config-egg": "^3.2.0",
+    "webstorm-disable-index": "^1.1.2"
+  },
+  "engines": {
+    "node": ">=6.0.0"
+  },
+  "scripts": {
+    "dev": "cross-env EGG_SERVER_ENV=dev egg-bin dev --port 7051",
+    "debug": "cross-env EGG_SERVER_ENV=dev egg-bin debug --port 7051",
+    "lint": "eslint .",
+    "serve": "cross-env EGG_SERVER_ENV=production NODE_ENV=production egg-scripts start --port=7051 --title=gods-pen-server --daemon && echo",
+    "stop": "egg-scripts stop --title=gods-pen-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "license": "MIT"
+}

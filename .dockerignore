@@ -1,0 +1,16 @@
+logs/
+npm-debug.log
+node_modules/
+coverage/
+.idea/
+run/
+.DS_Store
+*.swp
+.vscode/
+config/config.dev.js
+config/config.docker.js
+.git
+dist/
+sub/**/node_modules/
+sub/**/dist/
+config.yaml

@@ -1,0 +1,15 @@
+{
+  "script": "index.js",
+  "name":"godspen",
+  "log_date_format": "YYYY-MM-DD HH:mm:ss",
+  "env": {
+    "NODE_ENV": "development",
+    "PORT":"7051",
+    "EGG_SERVER_ENV":"dev"
+  },
+  "env_docker": {
+    "NODE_ENV": "production",
+    "PORT":"7051",
+    "EGG_SERVER_ENV":"docker"
+  }
+}
