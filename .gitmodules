@@ -1,0 +1,6 @@
+[submodule "sub/gods-pen-admin"]
+	path = sub/gods-pen-admin
+	url = https://github.com/ymm-tech/gods-pen-admin.git
+[submodule "sub/gods-pen"]
+	path = sub/gods-pen
+	url = https://github.com/ymm-tech/gods-pen.git

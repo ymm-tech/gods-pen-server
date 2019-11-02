@@ -11,3 +11,4 @@ config/config.docker.js
 .travis.yml
 appveyor.yml
 config.yaml
+config/config.dev.js.bak
