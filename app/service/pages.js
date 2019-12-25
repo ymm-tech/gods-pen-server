@@ -126,6 +126,12 @@ module.exports = app => {
         list = list.map(item => {
           var it = item.dataValues || {}
           if (it.id) {
+            try {
+              let content = it.draft || it.content
+              it.psdList = JSON.parse(content).psdList || []
+            } catch (error) {
+              it.psdList = []
+            }
             it.isPublish = !it.draft
             delete it.content
             delete it.draft
