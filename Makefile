@@ -1,4 +1,4 @@
-# todo 子模块目录名称不正确
+# 路径配置
 admin = sub/gods-pen-admin
 editor = sub/gods-pen
 
@@ -25,7 +25,7 @@ build-editor:
 
 # 清理文件
 clear-sub:
-	rm -rf sub
+	-rm -rf sub
 
 # 依次构建
 build-all: build-admin build-editor clear-sub
