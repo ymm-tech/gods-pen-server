@@ -18,6 +18,7 @@ module.exports = appInfo => {
     fileExtensions: [
       '.csv',
       '.txt',
+      '.psd'
     ]
   }
   // 自定义 middleware

@@ -1,5 +1,11 @@
 'use strict'
 const co = require('co')
+const PSD = require('psd')
+const fs = require('fs')
+const path = require('path')
+const rimraf = require('rimraf')
+const sendToWormhole = require('stream-wormhole')
+const OSS = require('ali-oss')
 module.exports = app => {
   class PagesController extends app.Controller {
 
@@ -448,7 +454,92 @@ module.exports = app => {
       ctx.validate(createRule)
       yield ctx.service.pages.updateFork(ctx.request.body)
     }
+     /**
+     * psd 文件解析
+     */
+    async psdToPage () {
+      const { ctx } = this;
+      let currentPathDir = `psd_image`
+      const SERVER_PATH = './'
+      fs.existsSync(path.join(SERVER_PATH, currentPathDir)) || fs.mkdirSync(path.join(SERVER_PATH, currentPathDir))
+      let stream = await ctx.getFileStream()
+      let filename = stream.filename  // stream对象也包含了文件名，大小等基本信息
+      // 创建文件写入路径
+      let target = path.join(SERVER_PATH, currentPathDir + '/'+ filename)
+      const result = await new Promise((resolve, reject) => {
+        // 创建文件写入流
+        const remoteFileStrem = fs.createWriteStream(target)
+        // 以管道方式写入流
+        stream.pipe(remoteFileStrem)
+        let errFlag 
+        // 监听error事件
+        remoteFileStrem.on('error', err => {
+          errFlag = true
+          // 停止写入
+          sendToWormhole(stream)
+          remoteFileStrem.destroy()
+          console.log(err)
+          reject(err)
+        })
+        // 监听写入完成事件
+        remoteFileStrem.on('finish', () => {
+          if (errFlag) return
+          resolve({ filename, name: stream.fields.name })
+        })
+      })
+      console.log(result)
+      if (!result.filename) return false
+      let psd = await PSD.open(path.join(SERVER_PATH, currentPathDir + '/'+ filename))
+      let descendantsList = psd.tree().descendants()
+      descendantsList.reverse()
+      let psdSourceList = []
+      for (var i = 0; i < descendantsList.length; i++) {
+        if (descendantsList[i].isGroup()) continue
+        if (!descendantsList[i].visible) continue
+        try {
+          await descendantsList[i].saveAsPng(path.join(SERVER_PATH, currentPathDir + `/${i}.png`))
+          const fName = `ml/psd-img/${[Date.now(), (Math.random() + 1) * 1000000000 | 0].map(v => v.toString(16)).join('')}.png`
+          let src = await this.upload(fs.createReadStream(SERVER_PATH + `psd_image/${i}.png`), fName)
+          console.log('src', src)
+          psdSourceList.push({
+            ...descendantsList[i].export(),
+            type: 'picture',
+            // imageSrc: SERVER_PATH + `psd_image/${i}.png`,
+            // path: binaryToBase(a)
+            src
+          })
+          rimraf(SERVER_PATH + `psd_image/${i}.png`, function (err) { // 删除当前目录下的 test.txt
+            console.log(err)
+          })  
+        } catch (e) {
+          // 转换不出来的图层先忽
+          console.log(e)
+          continue
+        }
+      }
+      rimraf(SERVER_PATH + `psd_image/`, function (err) { 
+        // 删除当前目录
+        // console.log(err)
+      });
+      ctx.body = {
+        elements: psdSourceList,
+        document: psd.tree().export().document
+      }
+    }
+    async upload (filedata, fileName) {
+      let ossClient = new OSS({
+        region: app.config.appConfig.oss.region,
+        accessKeyId: app.config.appConfig.oss.accessKeyId,
+        accessKeySecret: app.config.appConfig.oss.accessKeySecret,
+        bucket: app.config.appConfig.oss.bucket,
+      })
+      let result
+      await co(function * () {
+        result = yield ossClient.put(fileName, filedata)
+      })
+      // console.log('result', result)
+      return (result && result.url.replace(/^http(?!s)/, 'https')) || ''
+    }
   }
-
   return PagesController
 }

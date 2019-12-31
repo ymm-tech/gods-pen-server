@@ -83,6 +83,7 @@ module.exports = app => {
   app.post(`/editor/pages/history-publish`, 'pages.historyPublish')
   app.post(`/editor/pages/history-to-draft`, 'pages.historyToDraft')
   app.post(`/editor/pages/update-fork`, 'pages.updateFork')
+  app.post(`/editor/pages/psd-to-page`, 'pages.psdToPage')
 
   // names
   app.post(`/editor/pages/getNameBykeys`, 'pages.getNameBykeys')
