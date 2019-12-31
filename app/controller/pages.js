@@ -497,8 +497,9 @@ module.exports = app => {
         if (descendantsList[i].isGroup()) continue
         if (!descendantsList[i].visible) continue
         try {
-          await descendantsList[i].saveAsPng(path.join(SERVER_PATH, currentPathDir + `/${i}.png`))     
-          let src = await this.upload(fs.createReadStream(SERVER_PATH + `psd_image/${i}.png`), [Date.now(), (Math.random() + 1) * 1000000000 | 0].map(v => v.toString(16)).join('') + '.png')
+          await descendantsList[i].saveAsPng(path.join(SERVER_PATH, currentPathDir + `/${i}.png`))
+          const fName = `ml/psd-img/${[Date.now(), (Math.random() + 1) * 1000000000 | 0].map(v => v.toString(16)).join('')}.png`
+          let src = await this.upload(fs.createReadStream(SERVER_PATH + `psd_image/${i}.png`), fName)
           console.log('src', src)
           psdSourceList.push({
             ...descendantsList[i].export(),
