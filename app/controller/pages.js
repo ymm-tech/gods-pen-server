@@ -12,7 +12,7 @@ module.exports = app => {
     /**
      * 记录页面pv
      */
-    * pv () {
+    * pv() {
       const {
         ctx
       } = this
@@ -21,11 +21,13 @@ module.exports = app => {
       this.ctx.helper.tools.TSDB.putMetric(
         'h5.page.maliang.pv' + obj.pageKey,
         new Date().getTime(),
-        1, { uuid: obj.uuid }
+        1, {
+          uuid: obj.uuid
+        }
       )
     }
 
-    * pvuv () {
+    * pvuv() {
       const {
         ctx
       } = this
@@ -37,12 +39,12 @@ module.exports = app => {
       var getUv = function (array) {
         var dps = {}
         for (let index = 0; index < array.length; index++) {
-          let element = array[ index ];
+          let element = array[index];
           for (const key in element.dps) {
-            if (dps[ key ]) {
-              dps[ key ] += 1
+            if (dps[key]) {
+              dps[key] += 1
             } else {
-              dps[ key ] = 1
+              dps[key] = 1
             }
           }
         }
@@ -51,18 +53,18 @@ module.exports = app => {
       console.log('获取pv' + obj.pageKey)
       let pv = yield myTsdbClient.query(
         obj.startTime,
-        obj.endTime, [ {
+        obj.endTime, [{
           "aggregator": "sum",
           "metric": "h5.page.maliang.pv" + obj.pageKey,
           filters: [],
           downsample: myTsdbClient.composeDownsampleString('sum', obj.step)
-        } ]
+        }]
       )
       console.log('获取pv完成')
-      if (pv.error || !pv[ 0 ]) {
+      if (pv.error || !pv[0]) {
         pv = {}
       } else {
-        pv = pv[ 0 ].dps
+        pv = pv[0].dps
       }
       console.log('获取uv' + obj.pageKey)
       // let uv = yield myTsdbClient.query(
@@ -84,10 +86,13 @@ module.exports = app => {
       // } else {
       //   uv = getUv(uv)
       // }
-      ctx.body = { pv: pv, uv: {} }
+      ctx.body = {
+        pv: pv,
+        uv: {}
+      }
     }
 
-    * save () {
+    * save() {
       const {
         ctx
       } = this
@@ -108,13 +113,15 @@ module.exports = app => {
       if (obj.id) {
         const role = yield ctx.service.base.getUserRole(ctx.request.uid, obj.projectId)
         var permissionLimit = this.app.config.permissionLimit[obj.type] || {}
-        if (permissionLimit.save && !(role <= permissionLimit.save)) throw this.ctx.getError({msg: '您缺少“开发者”或更高权限，无法保存，请联系该页面管理人员添加权限'})
+        if (permissionLimit.save && !(role <= permissionLimit.save)) throw this.ctx.getError({
+          msg: '您缺少“开发者”或更高权限，无法保存，请联系该页面管理人员添加权限'
+        })
       }
 
       ctx.body = yield ctx.service.pages.save(obj)
     }
 
-    * list () {
+    * list() {
       const {
         ctx
       } = this
@@ -136,7 +143,7 @@ module.exports = app => {
       ctx.body = yield ctx.service.pages.list(query)
     }
 
-    * publiclist () {
+    * publiclist() {
       const {
         ctx
       } = this
@@ -145,7 +152,7 @@ module.exports = app => {
       ctx.body = yield ctx.service.pages.publiclist(ctx.request.body)
     }
 
-    * info () {
+    * info() {
       const {
         ctx
       } = this
@@ -162,7 +169,7 @@ module.exports = app => {
       ctx.body = info
     }
 
-    async detail () {
+    async detail() {
       const {
         ctx
       } = this
@@ -192,23 +199,26 @@ module.exports = app => {
         case 'edit':
         case 'history':
         case 'history_preview':
-          retval = await co(function * () {
+          retval = await co(function* () {
             return yield ctx.service.pages.detail(ctx.request.body)
           })
           if (['render', 'preview', 'history_preview'].includes(body.scene)) {
             retval.content = ctx.helper.tools.nodeTreeScriptTransform(retval.content)
           }
           if (body.scene == 'edit') {
-            role = await co(function * () {
+            role = await co(function* () {
               return yield ctx.service.base.getUserRole(ctx.request.uid, retval.projectId)
             })
-            if (role >= 4) throw ctx.getError({ status: 403, msg: '您没有此页面的权限' })
+            if (role >= 4) throw ctx.getError({
+              status: 403,
+              msg: '您没有此页面的权限'
+            })
           }
           if (body.scene == 'render') {
             this.ctx.app.setCache(body.pageKey, retval)
           }
       }
-      
+
       if (fromCache) {
         ctx.noWarp = 1
         ctx.body = `{"code":1,"msg":"success","data":${retval}}`
@@ -219,7 +229,7 @@ module.exports = app => {
       }
     }
 
-    * changeStatus () {
+    *changeStatus() {
       const {
         ctx
       } = this
@@ -240,7 +250,7 @@ module.exports = app => {
       ctx.body = yield ctx.service.pages.changeStatus(ctx.request.body)
     }
 
-    * setHomePage () {
+    * setHomePage() {
       const {
         ctx
       } = this
@@ -256,7 +266,7 @@ module.exports = app => {
       ctx.body = yield ctx.service.pages.setHomePage(ctx.request.body)
     }
 
-    * delete () {
+    * delete() {
       const {
         ctx
       } = this
@@ -274,7 +284,7 @@ module.exports = app => {
       yield ctx.service.pages.delete(query)
     }
 
-    * publish () {
+    * publish() {
       const {
         ctx
       } = this
@@ -303,13 +313,15 @@ module.exports = app => {
 
       const role = yield ctx.service.base.getUserRole(ctx.request.uid, body.projectId)
       var permissionLimit = this.app.config.permissionLimit[body.type] || {}
-      if (permissionLimit.publish && !(role <= permissionLimit.publish)) throw this.ctx.getError({msg: '您缺少“管理员”或更高权限，无法发布，请联系该页面管理人员'})
+      if (permissionLimit.publish && !(role <= permissionLimit.publish)) throw this.ctx.getError({
+        msg: '您缺少“管理员”或更高权限，无法发布，请联系该页面管理人员'
+      })
 
       yield ctx.service.pages.publish(body)
       this.ctx.app.delCache(body.pageKey) // 更新缓存 实际是清除缓存，待下次请求自动进行缓存
     }
 
-    * count () {
+    * count() {
       const {
         ctx
       } = this
@@ -319,7 +331,7 @@ module.exports = app => {
       }
     }
 
-    * history () {
+    * history() {
       const {
         ctx
       } = this
@@ -336,37 +348,80 @@ module.exports = app => {
       ctx.body = yield ctx.service.pages.history(body)
     }
 
-    * getNameBykeys () {
-      const {
-        ctx
-      } = this
-      let rule = {
-        ids: {
-          type: 'array',
-          itemType: 'string',
+    * getNameBykeys() {
+        const {
+          ctx
+        } = this
+        let rule = {
+          ids: {
+            type: 'array',
+            itemType: 'string',
+          }
+        }
+        ctx.validate(rule)
+        let names = yield ctx.service.pages.getNameBykeys(ctx.request.body)
+        ctx.body = {
+          names
         }
       }
-      ctx.validate(rule)
-      let names = yield ctx.service.pages.getNameBykeys(ctx.request.body)
-      ctx.body = { names }
-    }
-    * historyDelete () {
-      const {
-        ctx
-      } = this
-      const searchRule = {
-        id: {
-          type: 'string',
-          required: true,
-          allowEmpty: false
+      * historyDelete() {
+        const {
+          ctx
+        } = this
+        const searchRule = {
+          id: {
+            type: 'string',
+            required: true,
+            allowEmpty: false
+          }
         }
+        ctx.validate(searchRule, ctx.query)
+        var body = ctx.query
+        body.uid = ctx.request.uid
+        ctx.body = yield ctx.service.pages.deleteHistory(body)
       }
-      ctx.validate(searchRule, ctx.query)
-      var body = ctx.query
-      body.uid = ctx.request.uid
-      ctx.body = yield ctx.service.pages.deleteHistory(body)
-    }
-    * historyPublish () {
+      * historyPublish() {
+        const {
+          ctx
+        } = this
+        const createRule = {
+          id: {
+            type: 'int',
+            required: true
+          },
+          projectId: {
+            type: 'int',
+            required: true
+          },
+          type: {
+            type: 'int',
+            required: false
+          },
+          pageKey: {
+            type: 'string',
+            required: true
+          },
+          content: {
+            type: 'string',
+            required: true,
+            allowEmpty: false
+          }
+        }
+        ctx.validate(createRule)
+        var body = ctx.request.body
+        body.uid = ctx.request.uid;
+
+        const role = yield ctx.service.base.getUserRole(ctx.request.uid, body.projectId)
+        var permissionLimit = this.app.config.permissionLimit[body.type] || {}
+        if (permissionLimit.publish && !(role <= permissionLimit.publish)) throw this.ctx.getError({
+          msg: '您缺少“管理员”或更高权限，无法发布，请联系该页面管理人员'
+        })
+
+        yield ctx.service.pages.historyPublish(body)
+        this.ctx.app.delCache(body.pageKey) // 更新缓存 实际是清除缓存，待下次请求自动进行缓存
+      }
+
+    * historyToDraft() {
       const {
         ctx
       } = this
@@ -399,51 +454,14 @@ module.exports = app => {
 
       const role = yield ctx.service.base.getUserRole(ctx.request.uid, body.projectId)
       var permissionLimit = this.app.config.permissionLimit[body.type] || {}
-      if (permissionLimit.publish && !(role <= permissionLimit.publish)) throw this.ctx.getError({msg: '您缺少“管理员”或更高权限，无法发布，请联系该页面管理人员'})
-
-      yield ctx.service.pages.historyPublish(body)
-      this.ctx.app.delCache(body.pageKey) // 更新缓存 实际是清除缓存，待下次请求自动进行缓存
-    }
-
-    * historyToDraft () {
-      const {
-        ctx
-      } = this
-      const createRule = {
-        id: {
-          type: 'int',
-          required: true
-        },
-        projectId: {
-          type: 'int',
-          required: true
-        },
-        type: {
-          type: 'int',
-          required: false
-        },
-        pageKey: {
-          type: 'string',
-          required: true
-        },
-        content: {
-          type: 'string',
-          required: true,
-          allowEmpty: false
-        }
-      }
-      ctx.validate(createRule)
-      var body = ctx.request.body
-      body.uid = ctx.request.uid;
-      
-      const role = yield ctx.service.base.getUserRole(ctx.request.uid, body.projectId)
-      var permissionLimit = this.app.config.permissionLimit[body.type] || {}
-      if (permissionLimit.save && !(role <= permissionLimit.save)) throw this.ctx.getError({msg: '您缺少“开发者”或更高权限，无法保存，请联系该页面管理人员添加权限'})
+      if (permissionLimit.save && !(role <= permissionLimit.save)) throw this.ctx.getError({
+        msg: '您缺少“开发者”或更高权限，无法保存，请联系该页面管理人员添加权限'
+      })
 
       yield ctx.service.pages.historyToDraft(body)
     }
 
-    * updateFork () {
+    * updateFork() {
       const createRule = {
         id: {
           type: 'int',
@@ -454,24 +472,26 @@ module.exports = app => {
       ctx.validate(createRule)
       yield ctx.service.pages.updateFork(ctx.request.body)
     }
-     /**
+    /**
      * psd 文件解析
      */
-    async psdToPage () {
-      const { ctx } = this;
+    async psdToPage() {
+      const {
+        ctx
+      } = this;
       let currentPathDir = `psd_image`
       const SERVER_PATH = './'
       fs.existsSync(path.join(SERVER_PATH, currentPathDir)) || fs.mkdirSync(path.join(SERVER_PATH, currentPathDir))
       let stream = await ctx.getFileStream()
-      let filename = stream.filename  // stream对象也包含了文件名，大小等基本信息
+      let filename = stream.filename // stream对象也包含了文件名，大小等基本信息
       // 创建文件写入路径
-      let target = path.join(SERVER_PATH, currentPathDir + '/'+ filename)
+      let target = path.join(SERVER_PATH, currentPathDir + '/' + filename)
       const result = await new Promise((resolve, reject) => {
         // 创建文件写入流
         const remoteFileStrem = fs.createWriteStream(target)
         // 以管道方式写入流
         stream.pipe(remoteFileStrem)
-        let errFlag 
+        let errFlag
         // 监听error事件
         remoteFileStrem.on('error', err => {
           errFlag = true
@@ -484,12 +504,15 @@ module.exports = app => {
         // 监听写入完成事件
         remoteFileStrem.on('finish', () => {
           if (errFlag) return
-          resolve({ filename, name: stream.fields.name })
+          resolve({
+            filename,
+            name: stream.fields.name
+          })
         })
       })
       console.log(result)
       if (!result.filename) return false
-      let psd = await PSD.open(path.join(SERVER_PATH, currentPathDir + '/'+ filename))
+      let psd = await PSD.open(path.join(SERVER_PATH, currentPathDir + '/' + filename))
       let descendantsList = psd.tree().descendants()
       descendantsList.reverse()
       let psdSourceList = []
@@ -510,14 +533,14 @@ module.exports = app => {
           })
           rimraf(SERVER_PATH + `psd_image/${i}.png`, function (err) { // 删除当前目录下的 test.txt
             console.log(err)
-          })  
+          })
         } catch (e) {
           // 转换不出来的图层先忽
           console.log(e)
           continue
         }
       }
-      rimraf(SERVER_PATH + `psd_image/`, function (err) { 
+      rimraf(SERVER_PATH + `psd_image/`, function (err) {
         // 删除当前目录
         // console.log(err)
       });
@@ -526,15 +549,15 @@ module.exports = app => {
         document: psd.tree().export().document
       }
     }
-    async upload (filedata, fileName) {
+    async upload(filedata, fileName) {
       let ossClient = new OSS({
-        region: app.config.appConfig.oss.region,
-        accessKeyId: app.config.appConfig.oss.accessKeyId,
-        accessKeySecret: app.config.appConfig.oss.accessKeySecret,
-        bucket: app.config.appConfig.oss.bucket,
+        region: app.config.oss.region,
+        accessKeyId: app.config.oss.accessKeyId,
+        accessKeySecret: app.config.oss.accessKeySecret,
+        bucket: app.config.oss.bucket,
       })
       let result
-      await co(function * () {
+      await co(function* () {
         result = yield ossClient.put(fileName, filedata)
       })
       // console.log('result', result)
