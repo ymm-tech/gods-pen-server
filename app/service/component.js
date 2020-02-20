@@ -59,7 +59,7 @@ module.exports = app => {
   }
 
   async function ossUpload (files = [], manifest) {
-    const DIR = 'teste456e9778a99e'
+    const DIR = process.env.EGG_SERVER_ENV !== 'production' ? 'components-test' : 'components'
     let mainFile
     for (let file of files) {
       const name = file.name
