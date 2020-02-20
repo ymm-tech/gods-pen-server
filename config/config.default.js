@@ -87,6 +87,8 @@ module.exports = appInfo => {
     }
   }
 
+  config.zipDownloadApi = 'http://godspenshop.kayouyou.cn/api/resources/down'
+
   config.VIEW_PATH = 'view'
   config.ADMIN_PATH = 'admin'
   config.EDITOR_PATH = 'editor'

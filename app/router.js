@@ -32,6 +32,7 @@ module.exports = app => {
   app.get(`/component/info`, 'component.info') // 获取组件信息
   app.post(`/component/updata`, 'component.updata') // 更新组件信息
   app.post(`/component/delete`, 'component.delete') // 更新组件信息
+  app.post(`/component/import`, 'component.import') // 组件导入
 
   // 分组管理
   app.delete(`/project/group`, 'group.delete')

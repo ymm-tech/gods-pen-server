@@ -12,3 +12,4 @@ config/config.docker.js
 appveyor.yml
 config.yaml
 config/config.dev.js.bak
+config/config.local.js

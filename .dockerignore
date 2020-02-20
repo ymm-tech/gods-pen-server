@@ -15,3 +15,4 @@ sub/**/node_modules/
 sub/**/dist/
 config.yaml
 config/config.dev.js.bak
+config/config.local.js

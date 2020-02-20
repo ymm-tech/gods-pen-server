@@ -1590,6 +1590,13 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/code-point-at/download/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
 
+"coffee-script@~ 1.7.1":
+  version "1.7.1"
+  resolved "https://registry.npm.taobao.org/coffee-script/download/coffee-script-1.7.1.tgz#62996a861780c75e6d5069d13822723b73404bfc"
+  integrity sha1-YplqhheAx15tUGnROCJyO3NAS/w=
+  dependencies:
+    mkdirp "~0.3.5"
+
 coffee@^5.1.0:
   version "5.2.1"
   resolved "https://registry.npm.taobao.org/coffee/download/coffee-5.2.1.tgz#e0946a3363c740017359141484b8805f1a780dd3"
@@ -1597,6 +1604,11 @@ coffee@^5.1.0:
     cross-spawn "^6.0.5"
     debug "^4.1.0"
     is-type-of "^1.2.1"
+
+"coffeescript-module@~ 0.2.1":
+  version "0.2.1"
+  resolved "https://registry.npm.taobao.org/coffeescript-module/download/coffeescript-module-0.2.1.tgz#2c61aa86983cacd226719f9f1dda923cb0ae67b0"
+  integrity sha1-LGGqhpg8rNImcZ+fHdqSPLCuZ7A=
 
 collection-visit@^1.0.0:
   version "1.0.0"
@@ -3169,7 +3181,7 @@ humanize-ms@^1.2.0, humanize-ms@^1.2.1:
   dependencies:
     ms "^2.0.0"
 
-iconv-lite@0.4.24, iconv-lite@^0.4.15, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
+iconv-lite@0.4.24, iconv-lite@^0.4.15, iconv-lite@^0.4.24, iconv-lite@^0.4.4, "iconv-lite@~ 0.4.4":
   version "0.4.24"
   resolved "https://registry.npm.taobao.org/iconv-lite/download/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   dependencies:
@@ -3188,6 +3200,11 @@ ignore-walk@^3.0.1:
 ignore@^3.2.0, ignore@^3.3.5:
   version "3.3.10"
   resolved "https://registry.npm.taobao.org/ignore/download/ignore-3.3.10.tgz#0a97fb876986e8081c631160f8f9f389157f0043"
+
+immediate@~3.0.5:
+  version "3.0.6"
+  resolved "https://registry.npm.taobao.org/immediate/download/immediate-3.0.6.tgz#9db1dbd0faf8de6fbe0f5dd5e56bb606280de69b"
+  integrity sha1-nbHb0Pr43m++D13V5Wu2BigN5ps=
 
 imurmurhash@^0.1.4:
   version "0.1.4"
@@ -3620,9 +3637,24 @@ jsonpointer@^4.0.0:
   version "4.0.1"
   resolved "https://registry.npm.taobao.org/jsonpointer/download/jsonpointer-4.0.1.tgz#4fd92cb34e0e9db3c89c8622ecf51f9b978c6cb9"
 
+"jspack@~ 0.0.3":
+  version "0.0.4"
+  resolved "https://registry.npm.taobao.org/jspack/download/jspack-0.0.4.tgz#32dd35c7fdcb3e3456c18fbb7ef9ed0bc6238177"
+  integrity sha1-Mt01x/3LPjRWwY+7fvntC8YjgXc=
+
 jstoxml@^0.2.3:
   version "0.2.4"
   resolved "https://registry.npm.taobao.org/jstoxml/download/jstoxml-0.2.4.tgz#ff3fb67856883a032953c7ce8ce7486210f48447"
+
+jszip@^3.2.2:
+  version "3.2.2"
+  resolved "https://registry.npm.taobao.org/jszip/download/jszip-3.2.2.tgz#b143816df7e106a9597a94c77493385adca5bd1d"
+  integrity sha1-sUOBbffhBqlZepTHdJM4WtylvR0=
+  dependencies:
+    lie "~3.3.0"
+    pako "~1.0.2"
+    readable-stream "~2.3.6"
+    set-immediate-shim "~1.0.1"
 
 kcors@^1.3.2:
   version "1.3.3"
@@ -3783,6 +3815,13 @@ levn@^0.3.0, levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
+lie@~3.3.0:
+  version "3.3.0"
+  resolved "https://registry.npm.taobao.org/lie/download/lie-3.3.0.tgz#dcf82dee545f46074daf200c7c1c5a08e0f40f6a"
+  integrity sha1-3Pgt7lRfRgdNryAMfBxaCOD0D2o=
+  dependencies:
+    immediate "~3.0.5"
+
 load-json-file@^1.0.0:
   version "1.1.0"
   resolved "https://registry.npm.taobao.org/load-json-file/download/load-json-file-1.1.0.tgz#956905708d58b4bab4c2261b04f59f31c99374c0"
@@ -3858,6 +3897,11 @@ lodash.keys@^3.0.0:
 lodash@^4.0.0, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.2, lodash@^4.17.4, lodash@^4.3.0:
   version "4.17.11"
   resolved "https://registry.npm.taobao.org/lodash/download/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
+
+"lodash@~ 2.4":
+  version "2.4.2"
+  resolved "https://registry.npm.taobao.org/lodash/download/lodash-2.4.2.tgz#fadd834b9683073da179b3eae6d9c0d15053f73e"
+  integrity sha1-+t2DS5aDBz2hebPq5tnA0VBT9z4=
 
 long@^4.0.0:
   version "4.0.0"
@@ -4047,6 +4091,11 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1:
   resolved "https://registry.npm.taobao.org/mkdirp/download/mkdirp-0.5.1.tgz#30057438eac6cf7f8c4767f38648d6697d75c903"
   dependencies:
     minimist "0.0.8"
+
+mkdirp@~0.3.5:
+  version "0.3.5"
+  resolved "https://registry.npm.taobao.org/mkdirp/download/mkdirp-0.3.5.tgz#de3e5f8961c88c787ee1368df849ac4413eca8d7"
+  integrity sha1-3j5fiWHIjHh+4TaN+EmsRBPsqNc=
 
 mm@^2.4.1:
   version "2.5.0"
@@ -4496,6 +4545,11 @@ pac-resolver@^3.0.0:
     netmask "^1.0.6"
     thunkify "^2.1.2"
 
+pako@~1.0.2:
+  version "1.0.11"
+  resolved "https://registry.npm.taobao.org/pako/download/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
+  integrity sha1-bJWZ00DVTf05RjgCUqNXBaa5kr8=
+
 param-case@^2.1.0:
   version "2.1.1"
   resolved "https://registry.npm.taobao.org/param-case/download/param-case-2.1.1.tgz#df94fd8cf6531ecf75e6bef9a0858fbc72be2247"
@@ -4505,6 +4559,13 @@ param-case@^2.1.0:
 parameter@^2.4.0:
   version "2.4.0"
   resolved "https://registry.npm.taobao.org/parameter/download/parameter-2.4.0.tgz#85ea52e9dfee80265a07b086edbc352e68b39733"
+
+"parse-engine-data@~ 0.1":
+  version "0.1.2"
+  resolved "https://registry.npm.taobao.org/parse-engine-data/download/parse-engine-data-0.1.2.tgz#5161f6133c9888f52155ecced42716575dfea052"
+  integrity sha1-UWH2EzyYiPUhVezO1CcWV13+oFI=
+  dependencies:
+    iconv-lite "^0.4.4"
 
 parse-json@^2.2.0:
   version "2.2.0"
@@ -4614,6 +4675,11 @@ platform@^1.3.1, platform@^1.3.4:
 pluralize@^1.2.1:
   version "1.2.1"
   resolved "https://registry.npm.taobao.org/pluralize/download/pluralize-1.2.1.tgz#d1a21483fd22bb41e58a12fa3421823140897c45"
+
+pngjs@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/pngjs/download/pngjs-3.2.0.tgz#fc9fcea1a8a375da54a51148019d5abd41dbabde"
+  integrity sha1-/J/OoaijddpUpRFIAZ1avUHbq94=
 
 pnglib@:
   version "0.0.1"
@@ -4753,6 +4819,20 @@ ps-tree@^1.1.0, ps-tree@^1.2.0:
   resolved "https://registry.npm.taobao.org/ps-tree/download/ps-tree-1.2.0.tgz#5e7425b89508736cdd4f2224d028f7bb3f722ebd"
   dependencies:
     event-stream "=3.3.4"
+
+psd@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/psd/download/psd-3.2.0.tgz#d721c40207d4c99d82fee4ae2d7cfca4fb073da8"
+  integrity sha1-1yHEAgfUyZ2C/uSuLXz8pPsHPag=
+  dependencies:
+    coffee-script "~ 1.7.1"
+    coffeescript-module "~ 0.2.1"
+    iconv-lite "~ 0.4.4"
+    jspack "~ 0.0.3"
+    lodash "~ 2.4"
+    parse-engine-data "~ 0.1"
+    pngjs "3.2.0"
+    rsvp "~ 3.0.6"
 
 pseudomap@^1.0.2:
   version "1.0.2"
@@ -5060,9 +5140,21 @@ rimraf@^2.5.4, rimraf@^2.6.1, rimraf@^2.6.2, rimraf@~2.6.2:
   dependencies:
     glob "^7.1.3"
 
+rimraf@^3.0.0:
+  version "3.0.2"
+  resolved "https://registry.npm.taobao.org/rimraf/download/rimraf-3.0.2.tgz?cache=0&sync_timestamp=1581257110269&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Frimraf%2Fdownload%2Frimraf-3.0.2.tgz#f1a5402ba6220ad52cc1282bac1ae3aa49fd061a"
+  integrity sha1-8aVAK6YiCtUswSgrrBrjqkn9Bho=
+  dependencies:
+    glob "^7.1.3"
+
 rndm@1.2.0:
   version "1.2.0"
   resolved "https://registry.npm.taobao.org/rndm/download/rndm-1.2.0.tgz#f33fe9cfb52bbfd520aa18323bc65db110a1b76c"
+
+"rsvp@~ 3.0.6":
+  version "3.0.21"
+  resolved "https://registry.npm.taobao.org/rsvp/download/rsvp-3.0.21.tgz#49c588fe18ef293bcd0ab9f4e6756e6ac433359f"
+  integrity sha1-ScWI/hjvKTvNCrn05nVuasQzNZ8=
 
 run-async@^0.1.0:
   version "0.1.0"
@@ -5173,6 +5265,11 @@ serialize-json@^1.0.3:
 set-blocking@^2.0.0, set-blocking@~2.0.0:
   version "2.0.0"
   resolved "https://registry.npm.taobao.org/set-blocking/download/set-blocking-2.0.0.tgz#045f9782d011ae9a6803ddd382b24392b3d890f7"
+
+set-immediate-shim@~1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npm.taobao.org/set-immediate-shim/download/set-immediate-shim-1.0.1.tgz#4b2b1b27eb808a9f8dcc481a58e5e56f599f3f61"
+  integrity sha1-SysbJ+uAip+NzEgaWOXlb1mfP2E=
 
 set-value@^0.4.3:
   version "0.4.3"

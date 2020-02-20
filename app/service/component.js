@@ -1,14 +1,94 @@
-/**
- * Created with WebStorm.
- * User: kevan
- * Email:258137678@qq.com
- * Date: 2017/5/3
- * Time: 上午9:30
- * To change this template use File | Settings | File Templates.
- */
-var md5 = require('md5');
-'use strict'
+const co = require('co')
+const OSS = require('ali-oss')
+const request = require('request')
+var JSZip = require("jszip")
+
+function setConstVar (str, {
+  publicpath, namespace
+}) {
+  str = str.replace(/__OSS_BUCKET__/g, publicpath)
+  str = str.replace(/__NAMESPACE__/g, namespace)
+  return str
+}
+
+function normalizeName (name = '') {
+  return String(name).replace(/[-_\s]+(\w)/g, (m, p) => p.toUpperCase())
+}
+
+async function genManifest (pkgfile, uid) {
+  const pkg = JSON.parse(await pkgfile.async('text'))
+  const ns = normalizeName(pkg.author || (uid + 10000).toString(16))
+  return {
+    namespace: ns,
+    name: `${ns}/${normalizeName(pkg.name)}`,
+    type: +pkg.type || 0,
+    description: pkg.description,
+    version: pkg.version,
+    visibilitylevel: Number(!pkg.private),
+    tags: (pkg.tags || []).filter(t => !isNaN(t)).map(t => ({id: t}))
+  }
+}
+
 module.exports = app => {
+  const ossClient = new OSS({
+    region: app.config.oss.region,
+    accessKeyId: app.config.oss.accessKeyId,
+    accessKeySecret: app.config.oss.accessKeySecret,
+    bucket: app.config.oss.bucket,
+  })
+  const OSS_HOST = app.config.oss.host
+
+  async function downloadZip (id, token) {
+    const downloadApi = app.config.zipDownloadApi
+    const options = {
+      'method': 'POST',
+      'url': downloadApi,
+      'headers': {
+        'clikey': token,
+        'Content-Type': 'application/json'
+      },
+      encoding: null,
+      body: JSON.stringify({id: String(id)})
+    }
+    return await new Promise((resolve, reject) => {
+      request(options, (error, response, body) => {
+        if(error ||  response.statusCode !== 200) reject(error || new Error('资源下载错误'))
+        resolve(body)
+      })
+    })
+  }
+
+  async function ossUpload (files = [], manifest) {
+    const DIR = 'teste456e9778a99e'
+    let mainFile
+    for (let file of files) {
+      const name = file.name
+      const filepath = `${manifest.name}/${manifest.version}/${name.replace(/^dist[\/]/, '')}`
+      let data
+      if (/(index|editor)\.js$/.test(name)) {
+        data = await file.async('text')
+        data = setConstVar(data, { namespace: manifest.namespace, publicpath: `${OSS_HOST}/${DIR}/` })
+      } else {
+        data = await file.async('nodebuffer')
+      }
+      const res = await upload(filepath, data)
+      console.log(`${res.name} 上传成功: ${res.path}`)
+      if (/index\.js$/.test(name)) mainFile = res.path
+    }
+    return mainFile
+  
+    async function upload (filepath, data) {
+      if (typeof data === 'string') data = Buffer.from(data)
+      let result = await co(function * () {
+        return yield ossClient.put(`${DIR}/${filepath}`, data)
+      })
+      return {
+        name: result && result.name,
+        path: result && result.url.replace(/^http(?!s)/, 'https')
+      }
+    }
+  }
+
   class Component extends app.Service {
     * info (obj) {
       var item = yield this.ctx.model.Component.findOne({
@@ -336,6 +416,42 @@ module.exports = app => {
           msg: `该资源不可删除或者不是你上传的资源`
         });
       }
+    }
+
+    async import ({id, token}, userId) {
+      const that = this
+      const zipBuffer = await downloadZip(id, token).catch(e => (console.error(e), null))
+      if (!zipBuffer) return
+      const zip = await JSZip.loadAsync(zipBuffer)
+      const manifest = await genManifest(zip.files['package.json'], userId)
+      const exists = await co(function * () {
+        return yield that.list({
+          name: manifest.name,
+          version: manifest.version,
+          uid: userId,
+          like: false
+        })
+      })
+      if (exists && exists.list && exists.list.length > 0) {
+        throw this.ctx.getError({
+          msg: '组件库已存在相同名称和版本的组件，终止导入',
+        })
+      }
+      const files = Object.keys(zip.files).filter(k => k !== 'package.json').map(k => zip.files[k])
+      const mainFile = await ossUpload(files, manifest)
+      const res = await co(function * () {
+        return yield that.save({
+          userId: userId,
+          name: manifest.name,
+          version: manifest.version,
+          desc: manifest.description,
+          type: manifest.type,
+          tags: manifest.tags,
+          path: mainFile.replace(/^http:/, 'https:'),
+          visibilitylevel: manifest.visibilitylevel
+        })
+      })
+      return res
     }
 
   }
