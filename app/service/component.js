@@ -439,7 +439,7 @@ module.exports = app => {
           msg: '组件库已存在相同名称和版本的组件，终止导入',
         })
       }
-      const files = Object.keys(zip.files).filter(k => k !== 'package.json').map(k => zip.files[k])
+      const files = Object.keys(zip.files).filter(k => k !== 'package.json' && k !== 'install.js').map(k => zip.files[k])
       const mainFile = await ossUpload(files, manifest)
       const res = await co(function * () {
         return yield that.save({
