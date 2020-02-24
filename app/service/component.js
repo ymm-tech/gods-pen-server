@@ -4,10 +4,12 @@ const request = require('request')
 var JSZip = require("jszip")
 
 function setConstVar (str, {
-  publicpath, namespace
+  publicpath, namespace, name, version
 }) {
   str = str.replace(/__OSS_BUCKET__/g, publicpath)
   str = str.replace(/__NAMESPACE__/g, namespace)
+  str = str.replace(/__NAME__/g, name)
+  str = str.replace(/__VERSION__/g, version)
   return str
 }
 
@@ -20,7 +22,7 @@ async function genManifest (pkgfile, uid) {
   const ns = normalizeName(pkg.author || (uid + 10000).toString(16))
   return {
     namespace: ns,
-    name: `${ns}/${normalizeName(pkg.name)}`,
+    name: normalizeName(pkg.name),
     type: +pkg.type || 0,
     description: pkg.description,
     version: pkg.version,
@@ -63,11 +65,11 @@ module.exports = app => {
     let mainFile
     for (let file of files) {
       const name = file.name
-      const filepath = `${manifest.name}/${manifest.version}/${name.replace(/^dist[\/]/, '')}`
+      const filepath = `${manifest.namespace}/${manifest.name}/${manifest.version}/${name.replace(/^dist[\/]/, '')}`
       let data
       if (/(index|editor)\.js$/.test(name)) {
         data = await file.async('text')
-        data = setConstVar(data, { namespace: manifest.namespace, publicpath: `${OSS_HOST}/${DIR}/` })
+        data = setConstVar(data, { namespace: manifest.namespace, publicpath: `${OSS_HOST}/${DIR}/`, name: manifest.name, version: manifest.version })
       } else {
         data = await file.async('nodebuffer')
       }
@@ -426,7 +428,7 @@ module.exports = app => {
       const manifest = await genManifest(zip.files['package.json'], userId)
       const exists = await co(function * () {
         return yield that.list({
-          name: manifest.name,
+          name: `${manifest.namespace}/${manifest.name}`,
           version: manifest.version,
           uid: userId,
           like: false
@@ -442,7 +444,7 @@ module.exports = app => {
       const res = await co(function * () {
         return yield that.save({
           userId: userId,
-          name: manifest.name,
+          name: `${manifest.namespace}/${manifest.name}`,
           version: manifest.version,
           desc: manifest.description,
           type: manifest.type,
