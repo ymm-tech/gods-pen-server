@@ -11,5 +11,10 @@
     "NODE_ENV": "production",
     "PORT":"7051",
     "EGG_SERVER_ENV":"docker"
+  },
+  "env_prod": {
+    "NODE_ENV": "production",
+    "PORT":"7051",
+    "EGG_SERVER_ENV":"production"
   }
 }
