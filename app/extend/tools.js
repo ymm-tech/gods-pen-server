@@ -345,4 +345,8 @@ uBAU3akQpGYd7wLMMY+ND7/Hn8GjDk5qyjwlBKUsG6/bJ4hlzej9xORE5wIDAQAB
     }
     return format
   },
+  ossConfigValid (config = {}) {
+    const isInvalid = op => typeof op !== 'string' || op.trim() === '' || /<[^<>]+>/.test(op)
+    return !(isInvalid(config.accessKeyId) || isInvalid(config.accessKeySecret) || isInvalid(config.host) || isInvalid(config.bucket) || isInvalid(config.region))
+  }
 }

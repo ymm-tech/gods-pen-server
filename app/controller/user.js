@@ -282,6 +282,8 @@ module.exports = app => {
 
     * getTocken () {
       console.log('访问ip:', this.ctx.ip)
+      const valid = this.ctx.helper.tools.ossConfigValid(app.config.oss)
+      if (!valid) throw this.ctx.getError({ msg: '您未正确配置 oss 服务的相关字段，无法使用对象存储服务' })
       var expire_syncpoint = new Date().getTime() + 60 * 1000
       var policyToken = {
         accessKeyId: app.config.oss.accessKeyId,

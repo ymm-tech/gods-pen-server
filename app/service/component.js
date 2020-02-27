@@ -421,6 +421,8 @@ module.exports = app => {
     }
 
     async import ({id, token}, userId) {
+      const valid = this.ctx.helper.tools.ossConfigValid(app.config.oss)
+      if (!valid) throw this.ctx.getError({ msg: '您未正确配置 oss 服务的相关字段，无法使用对象存储服务' })
       const that = this
       const zipBuffer = await downloadZip(id, token).catch(e => (console.error(e), null))
       if (!zipBuffer) return
