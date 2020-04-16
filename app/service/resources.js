@@ -64,7 +64,8 @@ module.exports = app => {
                 from tb_resources r 
                 left join tb_res_tags_rel rel on r.id=rel.rid 
                 left join tb_tags t on rel.tid=t.id 
-                where ${sqlQuery}`, { type: 'SELECT', replacements: query });
+                where ${sqlQuery}
+                GROUP BY r.id `, { type: 'SELECT', replacements: query });
       // 查询列表数据
       var list = yield this.ctx.model.query(sql, { type: 'SELECT', replacements: query }) || []
       list = list.map(it => {
@@ -74,7 +75,7 @@ module.exports = app => {
         })) : []
         return it
       })
-      return { total: total[ 0 ].counts, list };
+      return { total: total.length, list };
     }
 
     * save (query) {
