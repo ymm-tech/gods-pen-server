@@ -13,8 +13,9 @@
     "captchapng": "^0.0.1",
     "co": "^4.6.0",
     "crypto-js": "^3.1.9-1",
-    "egg": "^2.2.0",
+    "egg": "2.26.0",
     "egg-cors": "^1.1.0",
+    "egg-multipart": "^2.4.0",
     "egg-mysql": "^3.0.0",
     "egg-security": "2.5.0",
     "egg-sequelize": "2.0.2",
@@ -31,6 +32,7 @@
     "nunjucks": "^3.0.0",
     "opentsdb-node-client": "^1.0.1",
     "psd": "^3.2.0",
+    "random-ua": "^0.0.6",
     "rimraf": "^3.0.0",
     "stream-wormhole": "^1.1.0"
   },

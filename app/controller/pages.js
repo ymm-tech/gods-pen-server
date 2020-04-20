@@ -3,6 +3,7 @@ const co = require('co')
 const PSD = require('psd')
 const fs = require('fs')
 const path = require('path')
+const request = require('request')
 const rimraf = require('rimraf')
 const sendToWormhole = require('stream-wormhole')
 const OSS = require('ali-oss')
@@ -482,8 +483,10 @@ module.exports = app => {
       let currentPathDir = `psd_image`
       const SERVER_PATH = './'
       fs.existsSync(path.join(SERVER_PATH, currentPathDir)) || fs.mkdirSync(path.join(SERVER_PATH, currentPathDir))
-      let stream = await ctx.getFileStream()
-      let filename = stream.filename // stream对象也包含了文件名，大小等基本信息
+      const query = ctx.request.body || {}
+      const type = /^https?:\/\//.test(query.url) ? 'url' : 'file'
+      let stream = type === 'url' ? request(query.url) : await ctx.getFileStream()
+      let filename = type === 'url' ? (query.url.match(/\/([^/]+)$/) || [ '', Date.now().toString(32) + Math.random().toString(32).slice(2, 4) ])[1] : stream.filename  // stream对象也包含了文件名，大小等基本信息
       // 创建文件写入路径
       let target = path.join(SERVER_PATH, currentPathDir + '/' + filename)
       const result = await new Promise((resolve, reject) => {
@@ -504,10 +507,7 @@ module.exports = app => {
         // 监听写入完成事件
         remoteFileStrem.on('finish', () => {
           if (errFlag) return
-          resolve({
-            filename,
-            name: stream.fields.name
-          })
+          resolve({ filename, name: type === 'url' ? filename : stream.fields.name })
         })
       })
       console.log(result)
