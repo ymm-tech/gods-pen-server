@@ -42,7 +42,7 @@
     "egg-ci": "^1.6.0",
     "egg-mock": "^3.20.0",
     "egg-scripts": "^2.11.1",
-    "eslint": "^3.19.0",
+    "eslint": "^4.18.2",
     "eslint-config-egg": "^3.2.0",
     "webstorm-disable-index": "^1.1.2"
   },
