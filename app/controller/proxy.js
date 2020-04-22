@@ -1,5 +1,10 @@
+const fs = require('fs')
 const Controller = require('egg').Controller
 const urlParser = require('url')
+const ua = require('random-ua')
+const mime = require('mime')
+const util = require('util')
+const request = util.promisify(require('request'))
 
 class ProxyController extends Controller {
   async imgCorsProxy () {
@@ -68,6 +73,60 @@ class ProxyController extends Controller {
       ctx.set(key, val)
     })
     ctx.body = result.res
+  }
+
+  async word2html () {
+    const { ctx } = this
+    const part = ctx.request.files && ctx.request.files[0] || {}
+    if (part.fieldname !== 'file' || !['docx', 'doc'].includes(mime.getExtension(part.mime))) {
+      ctx.cleanupRequestFiles()
+      throw this.ctx.getError({
+        msg: '仅支持docx或者doc类型文件'
+      })
+    }
+
+    const options = {
+      'method': 'POST',
+      'url': 'https://s6.aconvert.com/convert/convert-batch-win.php',
+      'headers': {
+        'Origin': 'https://www.aconvert.com',
+        'Accept-Language': 'zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7',
+        'User-Agent': ua.generate(),
+        'Content-Type': 'multipart/form-data',
+        'Accept': '*/*',
+        'Referer': 'https://www.aconvert.com/cn/document/doc-to-html/',
+        'Connection': 'keep-alive',
+        'DNT': '1'
+      },
+      formData: {
+        'file': fs.createReadStream(part.filepath),
+        'targetformat': 'html',
+        'code': '86000',
+        'filelocation': 'local'
+      }
+    }
+    const result = await request(options)
+      .then(({body}) => JSON.parse(body))
+      .catch(e => console.error(e))
+    
+    if (!result || !result.filename) {
+      ctx.cleanupRequestFiles()
+      throw this.ctx.getError({
+        msg: '文档解析失败'
+      })
+    }
+    ctx.cleanupRequestFiles()
+    
+    const html = await ctx.curl(`https://s6.aconvert.com/convert/p3r68-cdx67/${result.filename}`, {dataType: 'text'})
+      .then(v => v.data)
+      .catch(e => {
+        console.error(e)
+        return ''
+      })
+
+    ctx.body = {
+      html
+    }
   }
 }
 

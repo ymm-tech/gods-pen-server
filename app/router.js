@@ -134,4 +134,7 @@ module.exports = app => {
   // ossupload
   app.post(`/ossupload/uploadByUrls`, 'ossupload.uploadByUrls')
   app.post(`/ossupload/uploadFile`, 'ossupload.uploadFile')
+  
+  // word to html
+  app.post(`/transform/word2html`, 'proxy.word2html')
 }
