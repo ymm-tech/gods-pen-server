@@ -172,7 +172,7 @@ module.exports = app => {
         FROM tb_pages AS pages 
         left join tb_res_tags_rel rel on pages.id=rel.rid 
         left join tb_tags t on rel.tid=t.id 
-        WHERE pages.visibilitylevel = 1 AND pages.status = 1 ${sqlQuery}
+        WHERE ${!query.featured ? '' : 'pages.featured = 1 AND'} pages.visibilitylevel = 1 AND pages.status = 1 ${sqlQuery}
         `,{type:'SELECT', replacements: query})
       // if (list && list.length) {
       //   list = list.map(item => {
@@ -381,8 +381,39 @@ module.exports = app => {
       })
       return true
     }
+
+    async featuringPages ({ monthBefore = 3}) {
+      const date = (() => {
+        const ts = new Date(Date.now() - monthBefore * 86400000 * 30)
+        return `${ts.getFullYear()}-${ts.getMonth() + 1}-${ts.getDate()}`
+      })()
+      const list = await this.ctx.model.Pages.findAll({ 
+        attributes: ['id', 'key', 'name', 'image', 'desc', 'fork', 'featured'],
+        limit: 50,
+        // order: ['updateTime', 'DESC'],
+        where: {
+          updateTime: {
+            '$gte': date
+          },
+          visibilitylevel: 1,
+          featured: 0,
+          status: 1,
+        }
+      })
+      .then((pages = []) => pages.map(v => v.dataValues))
+      return list
+    }
+
+    async updateFeatured ({ value = 2, id, uid, key = '' }) {
+      const role = await this.ctx.service.user.getUserRole({ uid })
+      if (role !== 1) throw this.ctx.getError({msg: '用户无权限'})
+      if (!/^\w{3,}$/.test(key) && !/^\d+$/.test(id)) throw this.ctx.getError({msg: '未提供参数 id 或者 key'})
+      await this.ctx.model.Pages.update({ featured: value }, {
+        where: /^\w{3,}$/.test(key) ? { key } : { id }
+      })
+      return true
+    }
     
   }
-
   return Pages
 }

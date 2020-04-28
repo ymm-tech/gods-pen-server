@@ -413,6 +413,7 @@ CREATE TABLE `tb_pages` (
   `visibilitylevel` int(5) NOT NULL DEFAULT '1' COMMENT '显示状态（0私有，1公共开放）',
   `type` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0' COMMENT '页面类型，默认0，普通页面；1，flutter 页面；',
   `fork` int(1) unsigned zerofill NOT NULL DEFAULT '0' COMMENT '页面fork数量',
+  `featured` int(1) DEFAULT '0' COMMENT '加精 0 未处理 1 精选 2 一般 ',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `Index` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='abc';
@@ -642,6 +643,7 @@ CREATE TABLE `tb_user` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `oauth` varchar(64) DEFAULT NULL COMMENT '第三方登录鉴权id：渠道_id',
+  `role` tinyint(1) DEFAULT '0' COMMENT '权限 0 普通用户 1 管理员 其他未定可扩展',
   PRIMARY KEY (`id`),
   KEY `searchEmail` (`email`) USING BTREE,
   KEY `searchName` (`name`) USING BTREE

@@ -85,6 +85,8 @@ module.exports = app => {
   app.post(`/editor/pages/history-to-draft`, 'pages.historyToDraft')
   app.post(`/editor/pages/update-fork`, 'pages.updateFork')
   app.post(`/editor/pages/psd-to-page`, 'pages.psdToPage')
+  app.post(`/editor/pages/featuring`, 'pages.featuringPages')
+  app.post(`/editor/pages/update-featured`, 'pages.updateFeatured')
 
   // names
   app.post(`/editor/pages/getNameBykeys`, 'pages.getNameBykeys')

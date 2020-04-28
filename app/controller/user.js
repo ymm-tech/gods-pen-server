@@ -194,6 +194,7 @@ module.exports = app => {
         user.photo = info.photo;
         user.telephone = info.telephone;
         user.email = info.email;
+        user.role = info.role;
         user.security = ctx.query.uid > 0 ? '' : info.security;
         user.emailStatus = info.emailStatus;
         user.projectNums = info.projectCount;
