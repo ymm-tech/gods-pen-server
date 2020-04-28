@@ -563,6 +563,47 @@ module.exports = app => {
       // console.log('result', result)
       return (result && result.url.replace(/^http(?!s)/, 'https')) || ''
     }
+
+    async featuringPages () {
+      const createRule = {
+        month: {
+          type: 'int',
+        },
+      }
+      const ctx = this.ctx
+      ctx.validate(createRule)
+      const list = await ctx.service.pages.featuringPages({ monthBefore: ctx.request.body.month })
+      ctx.body = list
+    }
+
+    async updateFeatured () {
+      const createRule = {
+        id: {
+          type: 'int',
+          required: false,
+        },
+        value: {
+          type: 'int',
+          required: true,
+        },
+        key: {
+          type: 'string',
+          required: false,
+        }
+      }
+      const ctx = this.ctx
+      ctx.validate(createRule)
+      const res = ctx.request.body || {}
+      const result = await ctx.service.pages.updateFeatured({ 
+        id: res.id,
+        uid: ctx.request.uid,
+        value: res.value,
+        key: res.key
+      })
+      ctx.body = {
+        success: result
+      }
+    }
   }
   return PagesController
 }

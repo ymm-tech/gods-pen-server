@@ -10,6 +10,7 @@ module.exports = app => {
     draft: { field: 'draft', type: app.Sequelize.STRING },
     projectId: { field: 'project_id', type: app.Sequelize.INTEGER },
     status: { field: 'status', type: app.Sequelize.INTEGER },
+    featured: { field: 'featured', type: app.Sequelize.INTEGER },
     visibilitylevel: { field: 'visibilitylevel', type: app.Sequelize.INTEGER },
     type: { field: 'type', type: app.Sequelize.INTEGER }, // 页面类型，默认0，普通页面；1，flutter 页面；
     updateTime: { field: 'update_time', type: app.Sequelize.BIGINT },
