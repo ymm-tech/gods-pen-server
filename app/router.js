@@ -32,6 +32,7 @@ module.exports = app => {
   app.get(`/component/info`, 'component.info') // 获取组件信息
   app.post(`/component/updata`, 'component.updata') // 更新组件信息
   app.post(`/component/delete`, 'component.delete') // 更新组件信息
+  app.post(`/component/import`, 'component.import') // 组件导入
 
   // 分组管理
   app.delete(`/project/group`, 'group.delete')
@@ -83,6 +84,9 @@ module.exports = app => {
   app.post(`/editor/pages/history-publish`, 'pages.historyPublish')
   app.post(`/editor/pages/history-to-draft`, 'pages.historyToDraft')
   app.post(`/editor/pages/update-fork`, 'pages.updateFork')
+  app.post(`/editor/pages/psd-to-page`, 'pages.psdToPage')
+  app.post(`/editor/pages/featuring`, 'pages.featuringPages')
+  app.post(`/editor/pages/update-featured`, 'pages.updateFeatured')
 
   // names
   app.post(`/editor/pages/getNameBykeys`, 'pages.getNameBykeys')
@@ -132,4 +136,7 @@ module.exports = app => {
   // ossupload
   app.post(`/ossupload/uploadByUrls`, 'ossupload.uploadByUrls')
   app.post(`/ossupload/uploadFile`, 'ossupload.uploadFile')
+  
+  // word to html
+  app.post(`/transform/word2html`, 'proxy.word2html')
 }

@@ -387,6 +387,18 @@ module.exports = app => {
       const data = yield this.ctx.model.User.findAll(queryData);
       return data;
     }
+
+    async getUserRole ({uid = null}) {
+      if (uid === null || uid === '') return null
+      return this.ctx.model.User.findOne({ 
+        where: {
+          id: uid
+        },
+        attributes: ['id', 'role']
+      })
+      .then(({ dataValues = {}} = {}) => dataValues.role)
+      .catch(e => console.error(e))
+    }
   }
 
   return User;

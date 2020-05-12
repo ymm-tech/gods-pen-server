@@ -155,6 +155,27 @@ module.exports = app => {
       obj.uid = ctx.request.uid
       yield ctx.service.component.delete(obj)
     }
+
+    async import () {
+      const {
+        ctx
+      } = this
+      const searchRule = {
+        id: {
+          type: 'int',
+          required: true
+        },
+        token: {
+          type: 'string',
+          required: true
+        },
+      }
+      ctx.validate(searchRule)
+      const obj = ctx.request.body
+      const userId = ctx.request.uid
+      const result = await ctx.service.component.import(obj, userId)
+      ctx.body = result
+    }
   }
 
   return ComponentController

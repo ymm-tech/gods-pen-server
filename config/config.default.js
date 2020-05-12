@@ -11,6 +11,7 @@ module.exports = appInfo => {
   }
   // mutipart formdata
   config.multipart = {
+    fileModeMatch: /transform\/word2html$/,
     fieldSize: '10mb',
     fields: 20,
     fileSize: '10mb',
@@ -18,6 +19,9 @@ module.exports = appInfo => {
     fileExtensions: [
       '.csv',
       '.txt',
+      '.psd',
+      '.doc',
+      '.docx'
     ]
   }
   // 自定义 middleware
@@ -67,9 +71,14 @@ module.exports = appInfo => {
     csrf: {
       enable: false
     },
-    domainWhiteList: ['*']
+    domainWhiteList: []
   }
   config.cors = {
+    origin: (ctx) => {
+      console.log(ctx)
+      let transHeaders = ctx.request.headers
+      return transHeaders['origin'] || '*'
+    },
     credentials: true,
     allowHeaders: 'Range, authorization,Authorization, Content-Disposition, Content-Length, Content-MD5, Content-Type, X-Requested-With, X-File-Name,ysession,clikey',
     maxAge: 7200000
@@ -85,6 +94,8 @@ module.exports = appInfo => {
       publish: 2
     }
   }
+
+  config.zipDownloadApi = 'https://godspen.ymm56.com/shop/api/resources/down'
 
   config.VIEW_PATH = 'view'
   config.ADMIN_PATH = 'admin'

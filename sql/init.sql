@@ -413,6 +413,7 @@ CREATE TABLE `tb_pages` (
   `visibilitylevel` int(5) NOT NULL DEFAULT '1' COMMENT '显示状态（0私有，1公共开放）',
   `type` tinyint(1) unsigned zerofill NOT NULL DEFAULT '0' COMMENT '页面类型，默认0，普通页面；1，flutter 页面；',
   `fork` int(1) unsigned zerofill NOT NULL DEFAULT '0' COMMENT '页面fork数量',
+  `featured` int(1) DEFAULT '0' COMMENT '加精 0 未处理 1 精选 2 一般 ',
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `Index` (`key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='abc';
@@ -595,16 +596,6 @@ CREATE TABLE `tb_tags` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `tb_tags`
---
-
-LOCK TABLES `tb_tags` WRITE;
-/*!40000 ALTER TABLE `tb_tags` DISABLE KEYS */;
-INSERT INTO `tb_tags` VALUES (11,'文本',3,1,'2019-08-01 09:40:04','2019-08-01 10:18:23',1),(12,'图片',3,1,'2019-08-01 09:40:04','2019-08-15 07:40:25',2),(13,'画廊',3,1,'2019-08-01 09:40:04','2019-08-01 10:19:02',1),(14,'矢量图',3,1,'2019-08-01 09:40:04','2019-08-01 10:19:02',1),(15,'banner',3,1,'2019-08-01 09:40:04','2019-08-01 09:58:17',1),(16,'tab',3,1,'2019-08-01 09:40:04','2019-08-01 09:58:18',1),(17,'形状',3,1,'2019-08-01 09:40:04','2019-08-01 10:19:02',1),(18,'列表',3,1,'2019-08-01 09:40:06','2019-08-01 10:19:03',1),(19,'标题',3,1,'2019-08-01 10:00:12','2019-08-01 10:19:35',1),(20,'其他',3,1,'2019-08-01 10:00:45','2019-08-01 10:19:36',1);
-/*!40000 ALTER TABLE `tb_tags` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tb_template`
 --
 
@@ -652,6 +643,7 @@ CREATE TABLE `tb_user` (
   `update_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `oauth` varchar(64) DEFAULT NULL COMMENT '第三方登录鉴权id：渠道_id',
+  `role` tinyint(1) DEFAULT '0' COMMENT '权限 0 普通用户 1 管理员 其他未定可扩展',
   PRIMARY KEY (`id`),
   KEY `searchEmail` (`email`) USING BTREE,
   KEY `searchName` (`name`) USING BTREE

@@ -9,6 +9,7 @@ module.exports = app => {
     projectCount: { field: 'project_count', type: app.Sequelize.INTEGER },
     updateTime: { field: 'update_time', type: app.Sequelize.BIGINT },
     createTime: { field: 'create_time', type: app.Sequelize.BIGINT },
+    role: { field: 'role', type: app.Sequelize.INTEGER },
     oauth: { field: 'oauth', type: app.Sequelize.STRING }
   }, {
     timestamps: true,
