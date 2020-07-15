@@ -7,6 +7,7 @@ const CryptoJs = require('crypto-js')
 const Mock = require('mockjs')
 var TsdbClient = require('opentsdb-node-client')
 const babel = require("babel-core")
+const urlParser = require('url')
 
 module.exports = {
   TSDB:(function(){
@@ -348,5 +349,11 @@ uBAU3akQpGYd7wLMMY+ND7/Hn8GjDk5qyjwlBKUsG6/bJ4hlzej9xORE5wIDAQAB
   ossConfigValid (config = {}) {
     const isInvalid = op => typeof op !== 'string' || op.trim() === '' || /<[^<>]+>/.test(op)
     return !(isInvalid(config.accessKeyId) || isInvalid(config.accessKeySecret) || isInvalid(config.host) || isInvalid(config.bucket) || isInvalid(config.region))
-  }
+  },
+  isSafeUrl (url) {
+    if (!url || typeof url !== 'string') return false
+    const urlInfo = urlParser.parse(url)
+    const isSafeUrl = urlInfo && /^https?:$/.test(urlInfo.protocol) && !/^[\d.:]+$/.test(urlInfo.host) && urlInfo.hostname != 'localhost'
+    return isSafeUrl
+  },
 }

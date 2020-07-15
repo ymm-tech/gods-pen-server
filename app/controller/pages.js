@@ -7,6 +7,7 @@ const request = require('request')
 const rimraf = require('rimraf')
 const sendToWormhole = require('stream-wormhole')
 const OSS = require('ali-oss')
+
 module.exports = app => {
   class PagesController extends app.Controller {
 
@@ -485,6 +486,10 @@ module.exports = app => {
       fs.existsSync(path.join(SERVER_PATH, currentPathDir)) || fs.mkdirSync(path.join(SERVER_PATH, currentPathDir))
       const query = ctx.request.body || {}
       const type = /^https?:\/\//.test(query.url) ? 'url' : 'file'
+      if (type === 'url' && !ctx.helper.tools.isSafeUrl(query.url)) {
+        ctx.body = 'hello world'
+        return
+      }
       let stream = type === 'url' ? request(query.url) : await ctx.getFileStream()
       let filename = type === 'url' ? (query.url.match(/\/([^/]+)$/) || [ '', Date.now().toString(32) + Math.random().toString(32).slice(2, 4) ])[1] : stream.filename  // stream对象也包含了文件名，大小等基本信息
       // 创建文件写入路径
@@ -492,18 +497,26 @@ module.exports = app => {
       const result = await new Promise((resolve, reject) => {
         // 创建文件写入流
         const remoteFileStrem = fs.createWriteStream(target)
-        // 以管道方式写入流
-        stream.pipe(remoteFileStrem)
         let errFlag
-        // 监听error事件
-        remoteFileStrem.on('error', err => {
+        const onerror = (err) => {
           errFlag = true
-          // 停止写入
           sendToWormhole(stream)
           remoteFileStrem.destroy()
-          console.log(err)
+          console.error(err)
           reject(err)
-        })
+        }
+        // url 读取流校验
+        if (type === 'url') {
+          stream = stream.on('response', (response) => {
+            const isPsd = response.headers['content-type'] === 'image/vnd.adobe.photoshop'
+            if (!isPsd) onerror(new Error('不是 psd 资源'))
+          })
+          .on('error', err => onerror(err))
+        }
+        // 以管道方式写入流
+        stream.pipe(remoteFileStrem)
+        // 监听error事件
+        remoteFileStrem.on('error', err => onerror(err))
         // 监听写入完成事件
         remoteFileStrem.on('finish', () => {
           if (errFlag) return

@@ -1,8 +1,8 @@
 const fs = require('fs')
 const Controller = require('egg').Controller
-const urlParser = require('url')
 const ua = require('random-ua')
 const mime = require('mime')
+const sendToWormhole = require('stream-wormhole')
 const util = require('util')
 const request = util.promisify(require('request'))
 
@@ -11,12 +11,8 @@ class ProxyController extends Controller {
     const { ctx } = this
     const url = ctx.query['url']
     const responseType = ctx.query['responseType']
-    if (!url || typeof url !== 'string') {
-      ctx.body = 'No url specified'
-      return
-    }
-    if (!urlParser.parse(url).host) {
-      ctx.body = `Invalid url specified: ${url}`
+    if (!ctx.helper.tools.isSafeUrl(url)) {
+      ctx.body = 'hello world'
       return
     }
     let useStream = responseType == 'blob'
@@ -24,11 +20,18 @@ class ProxyController extends Controller {
       method: 'GET',
       streaming: useStream
     })
+    const contentType = result.res.headers['content-type']
+    const isImage = /^image\//.test(contentType)
+    if (!isImage) {
+      if (useStream) sendToWormhole(result.res)
+      ctx.body = `"${url}" is not a image resource`
+      return
+    }
     if (useStream) {
-      ctx.type = result.res.headers['content-type']
+      ctx.type = contentType
       ctx.body = result.res
     } else {
-      ctx.body = `data:${result.res.headers['content-type']};base64,${Buffer.from(
+      ctx.body = `data:${contentType};base64,${Buffer.from(
         result.res.data,
         'binary'
       ).toString('base64')}`
