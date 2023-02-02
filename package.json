@@ -23,7 +23,7 @@
     "elasticsearch": "^15.1.1",
     "ioredis": "^4.6.2",
     "js-yaml": "^3.13.1",
-    "jszip": "^3.2.2",
+    "jszip": "^3.8.0",
     "md5": "^2.2.1",
     "mime": "^2.4.0",
     "mockjs": "^1.0.1-beta3",

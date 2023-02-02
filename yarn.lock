@@ -3658,9 +3658,9 @@ jstoxml@^0.2.3:
   version "0.2.4"
   resolved "https://registry.npm.taobao.org/jstoxml/download/jstoxml-0.2.4.tgz#ff3fb67856883a032953c7ce8ce7486210f48447"
 
-jszip@^3.2.2:
-  version "3.2.2"
-  resolved "https://registry.npm.taobao.org/jszip/download/jszip-3.2.2.tgz#b143816df7e106a9597a94c77493385adca5bd1d"
+jszip@^3.8.0:
+  version "3.8.0"
+  resolved "https://registry.yarnpkg.com/jszip/-/jszip-3.8.0.tgz#a2ac3c33fe96a76489765168213655850254d51b"
   dependencies:
     lie "~3.3.0"
     pako "~1.0.2"
