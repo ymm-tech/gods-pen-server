@@ -4321,9 +4321,9 @@ node-uuid@~1.4.0:
   version "1.4.8"
   resolved "https://registry.npm.taobao.org/node-uuid/download/node-uuid-1.4.8.tgz#b040eb0923968afabf8d32fb1f17f1167fdab907"
 
-nodemailer@^4.0.1:
-  version "4.7.0"
-  resolved "https://registry.npm.taobao.org/nodemailer/download/nodemailer-4.7.0.tgz#4420e06abfffd77d0618f184ea49047db84f4ad8"
+nodemailer@^6.4.16:
+  version "6.4.16"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-6.4.16.tgz#5cb6391b1d79ab7eff32d6f9f48366b5a7117293"
 
 nopt@3.x:
   version "3.0.6"

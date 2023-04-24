@@ -28,7 +28,7 @@
     "mime": "^2.4.0",
     "mockjs": "^1.0.1-beta3",
     "moment": "^2.18.1",
-    "nodemailer": "^4.0.1",
+    "nodemailer": "^6.4.16",
     "nunjucks": "^3.0.0",
     "opentsdb-node-client": "^1.0.1",
     "psd": "^3.2.0",
